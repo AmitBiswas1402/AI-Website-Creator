@@ -12,21 +12,40 @@ const Provider = ({
   const { user, isLoaded, isSignedIn } = useUser();
   const [userDetails, setUserDetails] = useState<any>();
 
+  // useEffect(() => {
+  //   console.log("Is SignedIn?", isSignedIn, "user:", user);
+  //   if (isLoaded && isSignedIn && user) {
+  //     CreateNewUser();
+  //   }
+  // }, [isLoaded, isSignedIn, user]);
+
   useEffect(() => {
-    console.log("Is SignedIn?", isSignedIn, "user:", user);
-    if (isLoaded && isSignedIn && user) {
-      CreateNewUser();
-    }
-  }, [isLoaded, isSignedIn, user]);
+    user && CreateNewUser();
+  }, [user]);
+
+  // const CreateNewUser = async () => {
+  // const result = await axios.post("/api/users", {});
+  // console.log(result.data);
+
+  // try {
+  //   const result = await axios.post("/api/users", {});
+  //   console.log("API response:", result.data);
+  //   setUserDetails(result.data?.user);
+  // } catch (error: any) {
+  //     console.error("API call failed:", error?.response?.data || error.message);
+  //   }
+  // };
 
   const CreateNewUser = async () => {
-    const result = await axios.post("/api/users", {});
-    console.log("API response:", result.data);
-    setUserDetails(result.data?.user);
-    // try {
-    // } catch (error: any) {
-    //   console.error("API call failed:", error?.response?.data || error.message);
-    // }
+    try {
+      const result = await axios.post("/api/users", {}
+        // { withCredentials: true }
+      );
+      console.log("API response:", result.data);
+      setUserDetails(result.data.user);
+    } catch (error: any) {
+      console.error("API call failed:", error?.response?.data || error.message);
+    }
   };
 
   return (
