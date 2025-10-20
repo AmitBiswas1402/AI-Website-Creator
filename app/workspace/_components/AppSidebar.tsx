@@ -1,4 +1,5 @@
 "use client";
+
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import {
@@ -6,14 +7,11 @@ import {
   SidebarContent,
   SidebarFooter,
   SidebarGroup,
-  SidebarGroupContent,
   SidebarGroupLabel,
   SidebarHeader,
-  SidebarMenu,
-  SidebarMenuButton,
-  SidebarMenuItem,
 } from "@/components/ui/sidebar";
 import { UserDetailContext } from "@/context/UserDetailContext";
+import { UserButton, useUser } from "@clerk/nextjs";
 import { Plus } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
@@ -22,6 +20,7 @@ import { useContext, useState } from "react";
 export function AppSidebar() {
   const [projectList, setProjectList] = useState([]);
   const { userDetails, setUserDetails } = useContext(UserDetailContext);
+  const { user } = useUser();
 
   return (
     <Sidebar>
@@ -45,14 +44,19 @@ export function AppSidebar() {
         </SidebarGroup>
       </SidebarContent>
       <SidebarFooter>
-        <div>
+        <div className="p-3 border rounded-xl space-y-3 bg-secondary">
           <h2 className="flex justify-between items-center">
             Remaining Credits{" "}
-            <span className="font-bold">
-              {userDetails?.credit}
-            </span>
+            <span className="font-bold">{userDetails?.credits ?? 0}</span>
           </h2>
           <Progress value={33} />
+          <Button className="w-full">Upgrade Plans</Button>
+        </div>
+        <div className="flex items-center justify-center gap-2">
+          <UserButton />
+          <span className="font-semibold text-sm text-gray-700">
+            {user?.fullName}
+          </span>
         </div>
       </SidebarFooter>
     </Sidebar>

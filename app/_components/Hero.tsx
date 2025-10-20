@@ -1,16 +1,21 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { SignInButton } from "@clerk/nextjs";
+import { SignInButton, useUser } from "@clerk/nextjs";
+import axios from "axios";
 import {
   ArrowUp,
   HomeIcon,
   ImagePlus,
   Key,
   LayoutDashboard,
+  Loader2Icon,
   User,
 } from "lucide-react";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { toast } from "sonner";
+import { v4 as uuidv4 } from "uuid";
 
 const suggestions = [
   {
@@ -41,6 +46,36 @@ const suggestions = [
 
 const Hero = () => {
   const [userInput, setUserInput] = useState<string>();
+  const [loading, setLoading] = useState(false);
+  const { user } = useUser();
+  const router = useRouter();
+
+  const CreateNewProject = async () => {
+    setLoading(true);
+    const projectId = uuidv4();
+    const frameId = genRandom();
+    const message = [
+      {
+        role: "user",
+        content: userInput,
+      },
+    ];
+
+    try {
+      const result = await axios.post("/api/projects", {
+        projectId,
+        frameId,
+        message,
+      });
+      console.log(result.data);
+      toast.success("Project created!");
+      router.push(`/playground/${projectId}?frameId=${frameId}`);
+      setLoading(false);
+    } catch (error) {
+      toast.error("Internal server error");
+      console.log(error);
+    }
+  };
 
   return (
     <div className="flex flex-col items-center h-[80vh] justify-center">
@@ -60,15 +95,26 @@ const Hero = () => {
           <Button variant={"ghost"} size={"icon"}>
             <ImagePlus />
           </Button>
-          <SignInButton mode="modal" forceRedirectUrl={"/workspace"}>
+          {!user ? (
+            <SignInButton mode="modal" forceRedirectUrl={"/workspace"}>
+              <Button
+                size={"icon-lg"}
+                className="rounded-full"
+                disabled={!userInput}
+              >
+                <ArrowUp />
+              </Button>
+            </SignInButton>
+          ) : (
             <Button
               size={"icon-lg"}
               className="rounded-full"
-              disabled={!userInput}
+              disabled={!userInput || loading}
+              onClick={CreateNewProject}
             >
-              <ArrowUp />
+              {loading ? <Loader2Icon className="animate-spin" /> : <ArrowUp />}
             </Button>
-          </SignInButton>
+          )}
         </div>
       </div>
 
@@ -88,4 +134,10 @@ const Hero = () => {
     </div>
   );
 };
+
 export default Hero;
+
+const genRandom = () => {
+  const num = Math.floor(Math.random() * 10000);
+  return num;
+};

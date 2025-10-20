@@ -1,6 +1,11 @@
+import Hero from "../_components/Hero"
+
 const page = () => {
   return (
-    <div>page</div>
+    <div>
+      <Hero />
+    </div>
   )
 }
+
 export default page
