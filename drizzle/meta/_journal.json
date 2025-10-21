@@ -22,6 +22,27 @@
       "when": 1760954493515,
       "tag": "0002_massive_sugar_man",
       "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1761040949122,
+      "tag": "0003_deep_marauders",
+      "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1761042769804,
+      "tag": "0004_purple_oracle",
+      "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1761055823910,
+      "tag": "0005_volatile_whistler",
+      "breakpoints": true
     }
   ]
 }

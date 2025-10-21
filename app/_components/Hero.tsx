@@ -54,7 +54,7 @@ const Hero = () => {
     setLoading(true);
     const projectId = uuidv4();
     const frameId = genRandom();
-    const message = [
+    const messages = [
       {
         role: "user",
         content: userInput,
@@ -65,7 +65,7 @@ const Hero = () => {
       const result = await axios.post("/api/projects", {
         projectId,
         frameId,
-        message,
+        messages,
       });
       console.log(result.data);
       toast.success("Project created!");
@@ -89,7 +89,7 @@ const Hero = () => {
           placeholder="Describe your page design"
           className="w-full h-24 focus:outline-none focus:ring-0 resize-none"
           value={userInput}
-          onChange={(e) => setUserInput(e.target.value[0])}
+          onChange={(e) => setUserInput(e.target.value)}
         />
         <div className="flex justify-between items-center">
           <Button variant={"ghost"} size={"icon"}>

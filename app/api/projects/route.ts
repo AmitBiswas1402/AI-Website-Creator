@@ -7,17 +7,17 @@ export async function POST(req: NextRequest) {
     const {projectId, frameId, messages} = await req.json();
     const user = await currentUser();
 
-    const projectResult = await db.insert(projectTable).values({
+    await db.insert(projectTable).values({
         projectId,
         createdBy: user?.primaryEmailAddress?.emailAddress  
     })
 
-    const frameResult = await db.insert(frameTable).values({
+    await db.insert(frameTable).values({
         frameId,
         projectId: projectId
     })
 
-    const chatResult = await db.insert(chatTable).values({
+    await db.insert(chatTable).values({
         chatMessage: messages,
         createdBy: user?.primaryEmailAddress?.emailAddress
     })
