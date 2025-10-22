@@ -19,6 +19,7 @@ export async function POST(req: NextRequest) {
 
     await db.insert(chatTable).values({
         chatMessage: messages,
+        frameId,
         createdBy: user?.primaryEmailAddress?.emailAddress
     })
 
