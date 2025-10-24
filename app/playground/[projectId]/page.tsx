@@ -6,6 +6,7 @@ import WebSettings from "../_components/WebSettings";
 import WebsiteDesign from "../_components/WebsiteDesign";
 import axios from "axios";
 import { useEffect, useState } from "react";
+import { toast } from "sonner";
 
 export type Frame = {
   projectId: string;
@@ -89,9 +90,15 @@ const PlayGround = () => {
     );
     console.log(result.data);
     setFrameDetails(result.data);
+    const designCode = result.data?.designCode;
+    const index = designCode.indexOf("```html") + 7;
+    const formattedCode = designCode.slice(index);
+    setGeneratedCode(formattedCode);
     if (result.data?.chatMessages?.length == 1) {
       const userMsg = result.data?.chatMessages[0].content;
       SendMessage(userMsg);
+    } else {
+      setMessages(result.data?.chatMessages);
     }
   };
 
@@ -133,6 +140,7 @@ const PlayGround = () => {
       }
     }
 
+    await SaveGeneratedCode(aiResponse);
     // After streaming end
     if (!isCode) {
       setMessages((prev: any) => [
@@ -149,8 +157,28 @@ const PlayGround = () => {
   };
 
   useEffect(() => {
-    console.log(generatedCode);
-  }, [generatedCode]);
+    if (messages.length > 0) {
+      SaveMessages();
+    }
+  }, [messages]);
+
+  const SaveMessages = async () => {
+    const result = await axios.put("/api/chats", {
+      messages,
+      frameId,
+    });
+    console.log(result);
+  };
+
+  const SaveGeneratedCode = async (code: string) => {
+    const result = await axios.put("/api/frames", {
+      designCode: code,
+      frameId,
+      projectId,
+    });
+    console.log(result.data);
+    toast.success("Website is Ready!");
+  };
 
   return (
     <div>
@@ -165,7 +193,7 @@ const PlayGround = () => {
         />
 
         {/* Website design */}
-        <WebsiteDesign />
+        <WebsiteDesign generatedCode={generatedCode ?? ""} />
 
         {/* Settings */}
         {/* <WebSettings /> */}

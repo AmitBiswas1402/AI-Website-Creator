@@ -8,7 +8,8 @@ export async function POST(req: NextRequest) {
     const response = await axios.post(
       "https://openrouter.ai/api/v1/chat/completions",
       {
-        model: "google/gemma-3-4b-it:free", // or any OpenRouter-supported model
+        // model: "google/gemma-3-4b-it:free", 
+        model: "google/gemma-3-27b-it:free",
         messages,
         stream: true, // enable streaming
       },
