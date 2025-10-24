@@ -1,5 +1,6 @@
 "use client";
 import { useEffect, useRef } from "react";
+import WebPageTools from "./WebPageTools";
 
 type Props = {
   generatedCode: string;
@@ -82,9 +83,10 @@ const WebsiteDesign = ({ generatedCode }: Props) => {
     <div className="p-5 w-full">
       <iframe
         ref={iframeRef}
-        className="w-full h-[700px] border rounded"
+        className="w-full h-[600px] border-2 rounded-xl"
         sandbox="allow-scripts allow-same-origin"
       />
+      <WebPageTools />
     </div>
   );
 };
