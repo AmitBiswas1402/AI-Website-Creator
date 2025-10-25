@@ -21,25 +21,24 @@ const suggestions = [
   {
     label: "Dashboard",
     prompt:
-      "Create a responsive SaaS analytics dashboard with KPI cards, revenue and customer charts, and a recent activity table. Clean, minimal, grid-based layout.",
+      "Create a responsive SaaS analytics dashboard with charts and KPI cards.",
     icon: LayoutDashboard,
   },
   {
     label: "SignUp Form",
     prompt:
-      "Design a modern signup form with email/password fields, Google and GitHub auth buttons, and a terms checkbox. Focus on clarity, spacing, and responsiveness.",
+      "Design a modern signup form with email, password, and social login options.",
     icon: Key,
   },
   {
     label: "Hero",
-    prompt:
-      "Build a bold SaaS hero section with an announcement badge, gradient title, short subtitle, CTA buttons, social proof, and a mockup image. Polished and balanced.",
+    prompt: "Build a SaaS hero section with title, subtitle, CTA, and image.",
     icon: HomeIcon,
   },
   {
     label: "User Profile Card",
     prompt:
-      "Design a sleek user profile card with avatar, full name, bio, follower stats, and a Follow button. Smooth hover, rounded corners, and light/dark support.",
+      "Create a user profile card with avatar, name, bio, and follow button.",
     icon: User,
   },
 ];

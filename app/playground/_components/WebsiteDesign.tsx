@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import WebPageTools from "./WebPageTools";
 
 type Props = {
@@ -8,6 +8,7 @@ type Props = {
 
 const WebsiteDesign = ({ generatedCode }: Props) => {
   const iframeRef = useRef<HTMLIFrameElement>(null);
+  const [selectedScreenSize, setSetSelectedScreenSize] = useState("web");
 
   // Initialize iframe shell once
   useEffect(() => {
@@ -20,42 +21,42 @@ const WebsiteDesign = ({ generatedCode }: Props) => {
       <!DOCTYPE html>
       <html lang="en">
       <head>
-          <meta charset="UTF-8" />
-          <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-          <meta name="description" content="AI Website Builder - Modern TailwindCSS + Flowbite Template">
-          <title>AI Website Builder</title>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta name="description" content="AI Website Builder - Modern TailwindCSS + Flowbite Template">
+        <title>AI Website Builder</title>
 
-          <!-- Tailwind CSS -->
-          <script src="https://cdn.tailwindcss.com"></script>
+        <!-- Tailwind CSS -->
+        <script src="https://cdn.tailwindcss.com"></script>
 
-          <!-- Flowbite CSS & JS -->
-          <link href="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.3.0/flowbite.min.css" rel="stylesheet">
-          <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.3.0/flowbite.min.js"></script>
+        <!-- Flowbite CSS & JS -->
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.3.0/flowbite.min.css" rel="stylesheet">
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.3.0/flowbite.min.js"></script>
 
-          <!-- Font Awesome / Lucide -->
-          <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+        <!-- Font Awesome / Lucide -->
+        <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
 
-          <!-- Chart.js -->
-          <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+        <!-- Chart.js -->
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-          <!-- AOS -->
-          <link href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css" rel="stylesheet">
-          <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
+        <!-- AOS -->
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css" rel="stylesheet">
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
 
-          <!-- GSAP -->
-          <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+        <!-- GSAP -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
 
-          <!-- Lottie -->
-          <script src="https://cdnjs.cloudflare.com/ajax/libs/lottie-web/5.11.2/lottie.min.js"></script>
+        <!-- Lottie -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/lottie-web/5.11.2/lottie.min.js"></script>
 
-          <!-- Swiper -->
-          <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.css" />
-          <script src="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.js"></script>
+        <!-- Swiper -->
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.css" />
+        <script src="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.js"></script>
 
-          <!-- Tippy.js -->
-          <link rel="stylesheet" href="https://unpkg.com/tippy.js@6/dist/tippy.css" />
-          <script src="https://unpkg.com/@popperjs/core@2"></script>
-          <script src="https://unpkg.com/tippy.js@6"></script>
+        <!-- Tippy.js -->
+        <link rel="stylesheet" href="https://unpkg.com/tippy.js@6/dist/tippy.css" />
+        <script src="https://unpkg.com/@popperjs/core@2"></script>
+        <script src="https://unpkg.com/tippy.js@6"></script>
       </head>
       <body id="root"></body>
       </html>
@@ -80,13 +81,19 @@ const WebsiteDesign = ({ generatedCode }: Props) => {
   }, [generatedCode]);
 
   return (
-    <div className="p-5 w-full">
+    <div className="p-5 w-full flex items-center flex-col">
       <iframe
         ref={iframeRef}
-        className="w-full h-[600px] border-2 rounded-xl"
+        className={`${
+          selectedScreenSize == "web" ? "w-full" : "w-100"
+        } h-[600px] border-2 rounded-xl`}
         sandbox="allow-scripts allow-same-origin"
       />
-      <WebPageTools />
+      <WebPageTools
+        selectedScreenSize={selectedScreenSize}
+        setSelectedScreenSize={(v: string) => setSetSelectedScreenSize(v)}
+        generatedCode={generatedCode}
+      />
     </div>
   );
 };
