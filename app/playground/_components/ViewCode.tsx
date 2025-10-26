@@ -9,6 +9,12 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import { Copy } from "lucide-react";
 import { CopyBlock, github } from "react-code-blocks";
 import { toast } from "sonner";
@@ -16,33 +22,42 @@ import { toast } from "sonner";
 const ViewCode = ({ children, code, language = "javascript" }: any) => {
   const handleCopy = async () => {
     await navigator.clipboard.writeText(code);
-    toast.success("Copy Copied!");
+    toast.success("Code copied!");
   };
 
   return (
     <Dialog>
       <DialogTrigger asChild>{children}</DialogTrigger>
+
       <DialogContent className="min-w-7xl max-h-[600px] overflow-auto">
         <DialogHeader>
           <DialogTitle>
             <div className="flex items-center gap-4">
-              Source Code
-              <Button variant="secondary" onClick={handleCopy}>
-                <Copy />
-              </Button>
+              <span>Source Code</span>
+              <TooltipProvider delayDuration={100}>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Button variant="secondary" onClick={handleCopy}>
+                      <Copy className="w-4 h-4" />
+                    </Button>
+                  </TooltipTrigger>
+                  <TooltipContent side="top">
+                    <p>Copy</p>
+                  </TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
             </div>
           </DialogTitle>
         </DialogHeader>
 
         <DialogDescription asChild>
-          <div className="flex-1 overflow-auto rounded-lg border p-2">
+          <div className="flex-1 overflow-auto rounded-lg border p-2 code-viewer">
             <CopyBlock
               text={code?.trim() || ""}
               language={language}
               theme={github}
-              showLineNumbers={true}
-              wrapLongLines={true}
-              codeBlock
+              showLineNumbers
+              wrapLongLines
             />
           </div>
         </DialogDescription>

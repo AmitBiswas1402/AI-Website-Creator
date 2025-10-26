@@ -120,3 +120,12 @@
     @apply bg-background text-foreground;
   }
 }
+
+.code-viewer button,
+.code-viewer .react-code-blocks-copy-button,
+.code-viewer .copy-button,
+.code-viewer [class*="copy"] {
+  display: none !important;
+  pointer-events: none !important;
+  visibility: hidden !important;
+}
