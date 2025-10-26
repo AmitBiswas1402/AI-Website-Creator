@@ -1,5 +1,14 @@
+"use client";
 import { Button } from "@/components/ui/button";
-import { Monitor, SquareArrowOutUpRight, TabletSmartphone } from "lucide-react";
+import {
+  Code2Icon,
+  Download,
+  Monitor,
+  SquareArrowOutUpRight,
+  TabletSmartphone,
+} from "lucide-react";
+import ViewCode from "./ViewCode";
+import { useEffect, useState } from "react";
 
 const HTML_CODE = `
   <!DOCTYPE html>
@@ -46,22 +55,43 @@ const HTML_CODE = `
     {code}
   </body>
   </html>
-`
+`;
 
-const WebPageTools = ({ selectedScreenSize, setSelectedScreenSize, generatedCode }: any) => {
+const WebPageTools = ({
+  selectedScreenSize,
+  setSelectedScreenSize,
+  generatedCode,
+}: any) => {
+  const [finalCode, setFinalCode] = useState<string>();
+
+  useEffect(() => {
+    const cleanCode = (HTML_CODE.replace("{code}", generatedCode) || "")
+      .replace("```html", "")
+      .replace("```", "")
+      .replace("html", "");
+    setFinalCode(cleanCode);
+  }, [generatedCode]);
+
   const ViweInNewTab = () => {
     if (!generatedCode) return;
 
-    const cleanCode = (HTML_CODE.replace('{code}', generatedCode) || '')
-    .replace("```html", '')
-    .replace('```', '')
-    .replace('html', '')
-
-    const blob = new Blob([cleanCode], {type: 'text/html'});
+    const blob = new Blob([finalCode ?? ""], { type: "text/html" });
     const url = URL.createObjectURL(blob);
 
     window.open(url, "_blank");
-  }
+  };
+
+  const downloadCode = () => {
+    const blob = new Blob([finalCode ?? ""], { type: "text/html" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "index.html";
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  };
 
   return (
     <div className="mt-1 p-2 shadow rounded-xl w-full flex items-center justify-between">
@@ -86,9 +116,17 @@ const WebPageTools = ({ selectedScreenSize, setSelectedScreenSize, generatedCode
         </Button>
       </div>
 
-      <div>
+      <div className="flex gap-2">
         <Button variant={"outline"} onClick={() => ViweInNewTab()}>
           View <SquareArrowOutUpRight />
+        </Button>
+        <ViewCode code={finalCode}>
+          <Button>
+            View <Code2Icon />
+          </Button>
+        </ViewCode>
+        <Button onClick={downloadCode}>
+          Download <Download />
         </Button>
       </div>
     </div>
