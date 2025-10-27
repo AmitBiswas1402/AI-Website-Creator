@@ -2,7 +2,6 @@
 import { useParams, useSearchParams } from "next/navigation";
 import ChatSection from "../_components/ChatSection";
 import PlayGroundHeader from "../_components/PlayGroundHeader";
-import WebSettings from "../_components/WebSettings";
 import WebsiteDesign from "../_components/WebsiteDesign";
 import axios from "axios";
 import { useEffect, useState } from "react";
@@ -195,8 +194,7 @@ const PlayGround = () => {
         {/* Website design */}
         <WebsiteDesign generatedCode={generatedCode ?? ""} />
 
-        {/* Settings */}
-        {/* <WebSettings /> */}
+        
       </div>
     </div>
   );
