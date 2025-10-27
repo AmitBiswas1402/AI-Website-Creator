@@ -122,7 +122,7 @@ const WebPageTools = ({
         </Button>
         <ViewCode code={finalCode}>
           <Button>
-            View <Code2Icon />
+            Code <Code2Icon />
           </Button>
         </ViewCode>
         <Button onClick={downloadCode}>
