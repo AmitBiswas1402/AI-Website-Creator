@@ -3,6 +3,7 @@ import { useUser } from "@clerk/nextjs";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { UserDetailContext } from "@/context/UserDetailContext";
+import { OnSaveContext } from "@/context/OnSaveContext";
 
 const Provider = ({
   children,
@@ -11,6 +12,7 @@ const Provider = ({
 }>) => {
   const { user, isLoaded, isSignedIn } = useUser();
   const [userDetails, setUserDetails] = useState<any>();
+  const [onSaveDate, setOnSaveDate] = useState<any>();
 
   // useEffect(() => {
   //   console.log("Is SignedIn?", isSignedIn, "user:", user);
@@ -38,7 +40,9 @@ const Provider = ({
 
   const CreateNewUser = async () => {
     try {
-      const result = await axios.post("/api/users", {}
+      const result = await axios.post(
+        "/api/users",
+        {}
         // { withCredentials: true }
       );
       console.log("API response:", result.data);
@@ -51,7 +55,9 @@ const Provider = ({
   return (
     <div>
       <UserDetailContext.Provider value={{ userDetails, setUserDetails }}>
-        {children}
+        <OnSaveContext.Provider value={{ onSaveDate, setOnSaveDate }}>
+          {children}
+        </OnSaveContext.Provider>
       </UserDetailContext.Provider>
     </div>
   );

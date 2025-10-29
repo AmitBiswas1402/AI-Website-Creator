@@ -1,8 +1,12 @@
 "use client";
-import { useEffect, useRef, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import WebPageTools from "./WebPageTools";
 import WebSettings from "./WebSettings";
 import ImageSettingSection from "./ImageSettingsSection";
+import { OnSaveContext } from "@/context/OnSaveContext";
+import axios from "axios";
+import { toast } from "sonner";
+import { useParams, useSearchParams } from "next/navigation";
 
 type Props = {
   generatedCode: string;
@@ -57,6 +61,10 @@ const WebsiteDesign = ({ generatedCode }: Props) => {
   const iframeRef = useRef<HTMLIFrameElement>(null);
   const [selectedScreenSize, setSelectedScreenSize] = useState("web");
   const [selectedElement, setSelectedElement] = useState<HTMLElement | null>();
+  const { onSaveDate, setOnSaveDate } = useContext(OnSaveContext);
+  const { projectId } = useParams();
+  const params = useSearchParams();
+  const frameId = params.get("frameId");
 
   // Initialize iframe shell once
   useEffect(() => {
@@ -144,6 +152,44 @@ const WebsiteDesign = ({ generatedCode }: Props) => {
       doc.removeEventListener("keydown", handleKeyDown);
     };
   }, [generatedCode]);
+
+  useEffect(() => {
+    onSaveDate && onSaveCode();
+  }, [onSaveDate]);
+
+  const onSaveCode = async () => {
+    if (iframeRef.current) {
+      try {
+        const iframeDoc =
+          iframeRef.current.contentDocument ||
+          iframeRef.current.contentWindow?.document;
+        if (iframeDoc) {
+          const cloneDoc = iframeDoc.documentElement.cloneNode(
+            true
+          ) as HTMLElement;
+
+          const AllEls = cloneDoc.querySelectorAll<HTMLElement>("*");
+          AllEls.forEach((el) => {
+            el.style.outline = "";
+            el.style.cursor = "";
+          });
+
+          const html = cloneDoc.outerHTML;
+          console.log("HTML to save", html);
+
+          const result = await axios.put("/api/frames", {
+            designCode: html,
+            frameId,
+            projectId,
+          });
+          console.log(result.data);
+          toast.success("Saved!");
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    }
+  };
 
   return (
     <div className="flex gap-2 w-full">
