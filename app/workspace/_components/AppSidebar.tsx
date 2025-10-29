@@ -10,17 +10,32 @@ import {
   SidebarGroupLabel,
   SidebarHeader,
 } from "@/components/ui/sidebar";
+import { Skeleton } from "@/components/ui/skeleton";
 import { UserDetailContext } from "@/context/UserDetailContext";
 import { UserButton, useUser } from "@clerk/nextjs";
+import axios from "axios";
 import { Plus } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 
 export function AppSidebar() {
   const [projectList, setProjectList] = useState([]);
-  const { userDetails, setUserDetails } = useContext(UserDetailContext);
+  const [loading, setLoading] = useState(false);
+  const { userDetails } = useContext(UserDetailContext);
   const { user } = useUser();
+
+  useEffect(() => {
+    GetProjectList();
+  }, []);
+
+  const GetProjectList = async () => {
+    setLoading(true);
+    const result = await axios.get("/api/get-all-projects/");
+    console.log(result.data);
+    setProjectList(result.data);
+    setLoading(false);
+  };
 
   return (
     <Sidebar>
@@ -40,7 +55,43 @@ export function AppSidebar() {
           <SidebarGroupLabel className="text-sm px-2 text-gray-500">
             Projects
           </SidebarGroupLabel>
-          {projectList.length == 0}
+          {!loading && projectList.length == 0 && (
+            <h2 className="text-sm px-2 text-gray-5000">No projects to show</h2>
+          )}
+          <div>
+            {!loading && projectList.length > 0
+              ? projectList.map((project: any, index) => {
+                  const chatMessage = project?.chats?.[0]?.chatMessage;
+                  let title = "Untitled Project";
+
+                  // If chatMessage is an array of objects with `content`
+                  if (Array.isArray(chatMessage) && chatMessage[0]?.content) {
+                    title = chatMessage[0].content;
+                  }
+                  // If chatMessage is a plain string
+                  else if (typeof chatMessage === "string") {
+                    title = chatMessage;
+                  }
+
+                  return (
+                    <Link
+                      href={`/playground/${project.projectId}?frameId=${project.frameId}`}
+                      key={index}
+                      className="my-2 p-2 rounded-lg cursor-pointer transition-all duration-200 
+                hover:bg-gray-300 hover:border 
+                hover:border-black
+                  hover:shadow-lg 
+                  hover:scale-[1.02] 
+                  flex items-center justify-between"
+                    >
+                      <h2 className="line-clamp-1">{title}</h2>
+                    </Link>
+                  );
+                })
+              : [1, 2, 3, 4, 5].map((_, index) => (
+                  <Skeleton className="w-full h-10 rounded-lg mt-2" />
+                ))}
+          </div>
         </SidebarGroup>
       </SidebarContent>
       <SidebarFooter>
