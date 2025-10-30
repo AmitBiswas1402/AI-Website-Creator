@@ -89,10 +89,23 @@ const PlayGround = () => {
     );
     console.log(result.data);
     setFrameDetails(result.data);
-    const designCode = result.data?.designCode;
-    const index = designCode.indexOf("```html") + 7;
-    const formattedCode = designCode.slice(index);
-    setGeneratedCode(formattedCode);
+
+    // const designCode = result.data?.designCode;
+    // const index = designCode.indexOf("```html") + 7;
+    // const formattedCode = designCode.slice(index);
+    // setGeneratedCode(formattedCode);
+
+    const designCode = result.data?.designCode ?? "";
+
+    // Safely check before processing
+    if (designCode && designCode.includes("```html")) {
+      const index = designCode.indexOf("```html") + 7;
+      const formattedCode = designCode.slice(index);
+      setGeneratedCode(formattedCode);
+    } else {
+      setGeneratedCode(designCode || ""); 
+    }
+
     if (result.data?.chatMessages?.length == 1) {
       const userMsg = result.data?.chatMessages[0].content;
       SendMessage(userMsg);
@@ -193,8 +206,6 @@ const PlayGround = () => {
 
         {/* Website design */}
         <WebsiteDesign generatedCode={generatedCode ?? ""} />
-
-        
       </div>
     </div>
   );
