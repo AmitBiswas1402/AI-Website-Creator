@@ -1,4 +1,4 @@
-import { CogIcon } from "lucide-react";
+import { CogIcon, X } from "lucide-react";
 import React, { useEffect, useState } from "react";
 import {
   Select,
@@ -80,7 +80,16 @@ const WebSettings = ({ selectedEl, clearSelection }: Props) => {
   };
 
   return (
-    <div className="w-96 shadow p-4 space-y-4 overflow-auto h-[90vh] rounded-xl mt-2 mr-2">
+    <div className="relative w-96 shadow p-4 space-y-4 overflow-auto h-[90vh] rounded-xl mt-2 mr-2">
+      <Button
+        variant={'ghost'}
+        size={'icon'}
+        onClick={clearSelection}
+        className="absolute top-3 right-3 p-1 rounded-full hover:bg-gray-200"
+        aria-label="Close settings"
+      >
+        <X size={18} />
+      </Button>
       <h2 className="flex gap-2 items-center font-bold">
         <CogIcon /> Settings
       </h2>

@@ -2,6 +2,7 @@
 
 import React, { useRef, useState } from "react";
 import {
+  X,
   Image as ImageIcon,
   Crop,
   Expand,
@@ -21,6 +22,7 @@ import ImageKit from "imagekit";
 
 type Props = {
   selectedEl: HTMLImageElement;
+  clearSelection: () => void;
 };
 
 const transformOptions = [
@@ -56,7 +58,7 @@ const imagekit = new ImageKit({
   urlEndpoint: process.env.NEXT_PUBLIC_IMAGEKIT_URL_ENDPOINT!,
 });
 
-const ImageSettingSection = ({ selectedEl }: Props) => {
+const ImageSettingSection = ({ selectedEl, clearSelection }: Props) => {
   const [altText, setAltText] = useState(selectedEl.alt || "");
   const [width, setWidth] = useState<number>(selectedEl.width || 300);
   const [height, setHeight] = useState<number>(selectedEl.height || 200);
@@ -131,10 +133,23 @@ const ImageSettingSection = ({ selectedEl }: Props) => {
   };
 
   return (
-    <div className="w-96 shadow p-4 space-y-4">
-      <h2 className="flex gap-2 items-center font-bold">
-        <ImageIcon /> Image Settings
+    <div className="w-96 max-w-full shadow-lg bg-white dark:bg-gray-900 p-5 space-y-5 relative rounded-2xl border border-gray-200 dark:border-gray-800 transition-all duration-300">
+      {/* Close button */}
+      <Button
+        variant={'ghost'}
+        onClick={clearSelection}
+        size={'icon'}
+        className="absolute top-3 right-3 rounded-full dark:hover:bg-gray-700 transition"
+        aria-label="Close settings"
+      >
+        <X size={18} />
+      </Button>
+
+      {/* Header */}
+      <h2 className="flex gap-2 items-center font-semibold text-gray-800 dark:text-gray-200 text-lg">
+        <ImageIcon size={20} /> Image Settings
       </h2>
+
 
       {/* Preview (clickable) */}
       <div className="flex justify-center">

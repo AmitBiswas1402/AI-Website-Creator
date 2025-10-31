@@ -1,7 +1,7 @@
 "use client";
 import { useContext, useEffect, useRef, useState } from "react";
 import WebPageTools from "./WebPageTools";
-import WebSettings from "./WebSettings";
+import WebSettings from "./WebSettingsSection";
 import ImageSettingSection from "./ImageSettingsSection";
 import { OnSaveContext } from "@/context/OnSaveContext";
 import axios from "axios";
@@ -15,45 +15,55 @@ type Props = {
 const HTML_CODE = `
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="AI Website Builder - Modern TailwindCSS + Flowbite Template">
-  <title>AI Website Builder</title>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="AI Website Builder - Modern TailwindCSS + Flowbite Template">
+    <title>AI Website Builder</title>
 
-  <!-- Tailwind CSS -->
-  <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
 
-  <!-- Flowbite CSS & JS -->
-  <link href="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.3.0/flowbite.min.css" rel="stylesheet">
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.3.0/flowbite.min.js"></script>
+    <!-- Flowbite -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.3.0/flowbite.min.css" rel="stylesheet" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.3.0/flowbite.min.js"></script>
 
-  <!-- Font Awesome / Lucide -->
-  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
 
-  <!-- Chart.js -->
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-  <!-- AOS -->
-  <link href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css" rel="stylesheet">
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
+    <!-- AOS -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css" rel="stylesheet" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
 
-  <!-- GSAP -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <!-- GSAP -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
 
-  <!-- Lottie -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/lottie-web/5.11.2/lottie.min.js"></script>
+    <!-- Lottie -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/lottie-web/5.11.2/lottie.min.js"></script>
 
-  <!-- Swiper -->
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.css" />
-  <script src="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.js"></script>
+    <!-- Swiper -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.css" />
+    <script src="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.js"></script>
 
-  <!-- Tippy.js -->
-  <link rel="stylesheet" href="https://unpkg.com/tippy.js@6/dist/tippy.css" />
-  <script src="https://unpkg.com/@popperjs/core@2"></script>
-  <script src="https://unpkg.com/tippy.js@6"></script>
-</head>
-<body id="root"></body>
+    <!-- Tippy.js -->
+    <link rel="stylesheet" href="https://unpkg.com/tippy.js@6/dist/tippy.css" />
+    <script src="https://unpkg.com/@popperjs/core@2"></script>
+    <script src="https://unpkg.com/tippy.js@6"></script>
+
+    <style>
+      body {
+        margin: 0;
+        overflow-x: hidden;
+      }
+      * {
+        transition: outline 0.15s ease;
+      }
+    </style>
+  </head>
+  <body id="root"></body>
 </html>
 `;
 
@@ -87,11 +97,11 @@ const WebsiteDesign = ({ generatedCode }: Props) => {
     if (!root) return;
 
     // Inject generated HTML
-    root.innerHTML =
-      generatedCode
-        ?.replaceAll("```html", "")
-        .replaceAll("```", "")
-        .replace("html", "") ?? "";
+    root.innerHTML = (generatedCode || "")
+      .replaceAll("```html", "")
+      .replaceAll("```", "")
+      .replace(/^html/, "")
+      .trim();
 
     let hoverEl: HTMLElement | null = null;
     let selectedEl: HTMLElement | null = null;
@@ -101,7 +111,7 @@ const WebsiteDesign = ({ generatedCode }: Props) => {
       const target = e.target as HTMLElement;
       if (hoverEl && hoverEl !== target) hoverEl.style.outline = "";
       hoverEl = target;
-      hoverEl.style.outline = "2px dotted #3b82f6"; // blue hover
+      hoverEl.style.outline = "2px dotted #3b82f6"; 
     };
 
     const handleMouseOut = () => {
@@ -123,7 +133,7 @@ const WebsiteDesign = ({ generatedCode }: Props) => {
       }
 
       selectedEl = target;
-      selectedEl.style.outline = "2px solid #ef4444"; // red for selected
+      selectedEl.style.outline = "2px solid #ef4444";
       selectedEl.setAttribute("contenteditable", "true");
       selectedEl.focus();
       console.log("Selected element:", selectedEl);
@@ -209,16 +219,11 @@ const WebsiteDesign = ({ generatedCode }: Props) => {
       </div>
 
       {/* Settings */}
-      {/* <WebSettings
-        // @ts-ignore
-        selectedEl={selectedElement}
-        clearSelection={() => setSelectedElement(null)}
-      /> */}
-
       {selectedElement?.tagName == "IMG" ? (
         <ImageSettingSection
           // @ts-ignore
           selectedEl={selectedElement}
+          clearSelection={() => setSelectedElement(null)}
         />
       ) : selectedElement ? (
         <WebSettings
