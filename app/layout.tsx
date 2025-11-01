@@ -8,7 +8,7 @@ import { Toaster } from "@/components/ui/sonner";
 const outfit = Outfit({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Create Next App",
+  title: "AI Web Creator - Create layouts of websites easily",
   icons: "/logo.svg",
 };
 
