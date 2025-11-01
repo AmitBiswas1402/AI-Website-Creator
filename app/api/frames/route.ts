@@ -6,7 +6,7 @@ import { NextRequest, NextResponse } from "next/server";
 export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url);
   const frameId = searchParams.get("frameId");
-  const projectId = searchParams.get("projectId");
+  searchParams.get("projectId");
 
   const frameResult = await db
     .select()
@@ -31,7 +31,7 @@ export async function GET(req: NextRequest) {
 export async function PUT(req: NextRequest) {
   const { designCode, frameId, projectId } = await req.json();
 
-  const result = await db
+  await db
     .update(frameTable)
     .set({
       designCode,
