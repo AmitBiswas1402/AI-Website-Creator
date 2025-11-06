@@ -5,7 +5,7 @@ import { ArrowUp } from "lucide-react";
 import { useState } from "react";
 
 type Props = {
-  messages: Messages[] | any; 
+  messages: Messages[] | any;
   onSend: (message: string) => void;
   loading: boolean;
 };
@@ -15,7 +15,7 @@ const ChatSection = ({ messages, onSend, loading }: Props) => {
 
   const handleSend = () => {
     if (!input.trim()) return;
-    onSend(input);
+    onSend(input.trim());
     setInput("");
   };
 
@@ -68,7 +68,7 @@ const ChatSection = ({ messages, onSend, loading }: Props) => {
           size={"icon-lg"}
           className="rounded-full"
           onClick={handleSend}
-          disabled={loading}
+          disabled={loading || !input.trim()} 
         >
           <ArrowUp />
         </Button>
