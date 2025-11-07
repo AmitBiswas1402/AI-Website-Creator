@@ -4,8 +4,9 @@ import {
   Code2Icon,
   Download,
   Monitor,
+  Smartphone,
   SquareArrowOutUpRight,
-  TabletSmartphone,
+  Tablet,
 } from "lucide-react";
 import ViewCode from "./ViewCode";
 import { useEffect, useState } from "react";
@@ -97,22 +98,33 @@ const WebPageTools = ({
     <div className="mt-1 p-2 shadow rounded-xl w-full flex items-center justify-between">
       <div className="flex gap-2">
         <Button
-          variant={"ghost"}
-          className={`${
-            selectedScreenSize == "web" ? "border border-primary" : null
-          }`}
+          variant="ghost"
+          className={
+            selectedScreenSize === "web" ? "border border-primary" : ""
+          }
           onClick={() => setSelectedScreenSize("web")}
         >
           <Monitor />
         </Button>
+
         <Button
-          variant={"ghost"}
-          className={`${
-            selectedScreenSize == "mobile" ? "border border-primary" : null
-          }`}
+          variant="ghost"
+          className={
+            selectedScreenSize === "tablet" ? "border border-primary" : ""
+          }
+          onClick={() => setSelectedScreenSize("tablet")}
+        >
+          <Tablet /> 
+        </Button>
+
+        <Button
+          variant="ghost"
+          className={
+            selectedScreenSize === "mobile" ? "border border-primary" : ""
+          }
           onClick={() => setSelectedScreenSize("mobile")}
         >
-          <TabletSmartphone />
+          <Smartphone />
         </Button>
       </div>
 

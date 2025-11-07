@@ -111,7 +111,7 @@ const WebsiteDesign = ({ generatedCode }: Props) => {
       const target = e.target as HTMLElement;
       if (hoverEl && hoverEl !== target) hoverEl.style.outline = "";
       hoverEl = target;
-      hoverEl.style.outline = "2px dotted #3b82f6"; 
+      hoverEl.style.outline = "2px dotted #3b82f6";
     };
 
     const handleMouseOut = () => {
@@ -207,7 +207,11 @@ const WebsiteDesign = ({ generatedCode }: Props) => {
         <iframe
           ref={iframeRef}
           className={`${
-            selectedScreenSize === "web" ? "w-full" : "w-100"
+            selectedScreenSize === "web"
+              ? "w-full"
+              : selectedScreenSize === "tablet"
+              ? "w-[768px]"
+              : "w-[375px]"
           } h-[600px] border-2 rounded-xl`}
           sandbox="allow-same-origin allow-scripts allow-pointer-lock allow-forms"
         />
