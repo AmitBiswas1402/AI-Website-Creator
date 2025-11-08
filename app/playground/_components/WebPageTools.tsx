@@ -10,6 +10,11 @@ import {
 } from "lucide-react";
 import ViewCode from "./ViewCode";
 import { useEffect, useState } from "react";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 const HTML_CODE = `
   <!DOCTYPE html>
@@ -97,35 +102,56 @@ const WebPageTools = ({
   return (
     <div className="mt-1 p-2 shadow rounded-xl w-full flex items-center justify-between">
       <div className="flex gap-2">
-        <Button
-          variant="ghost"
-          className={
-            selectedScreenSize === "web" ? "border border-primary" : ""
-          }
-          onClick={() => setSelectedScreenSize("web")}
-        >
-          <Monitor />
-        </Button>
+        <Tooltip>
+          <TooltipTrigger>
+            <Button
+              variant="ghost"
+              className={
+                selectedScreenSize === "web" ? "border border-primary" : ""
+              }
+              onClick={() => setSelectedScreenSize("web")}
+            >
+              <Monitor />
+            </Button>
+          </TooltipTrigger>
+          <TooltipContent>
+            <p>PC</p>
+          </TooltipContent>
+        </Tooltip>
 
-        <Button
-          variant="ghost"
-          className={
-            selectedScreenSize === "tablet" ? "border border-primary" : ""
-          }
-          onClick={() => setSelectedScreenSize("tablet")}
-        >
-          <Tablet /> 
-        </Button>
+        <Tooltip>
+          <TooltipTrigger>
+            <Button
+              variant="ghost"
+              className={
+                selectedScreenSize === "tablet" ? "border border-primary" : ""
+              }
+              onClick={() => setSelectedScreenSize("tablet")}
+            >
+              <Tablet />
+            </Button>
+          </TooltipTrigger>
+          <TooltipContent>
+            <p>Tab</p>
+          </TooltipContent>
+        </Tooltip>
 
-        <Button
-          variant="ghost"
-          className={
-            selectedScreenSize === "mobile" ? "border border-primary" : ""
-          }
-          onClick={() => setSelectedScreenSize("mobile")}
-        >
-          <Smartphone />
-        </Button>
+        <Tooltip>
+          <TooltipTrigger>
+            <Button
+              variant="ghost"
+              className={
+                selectedScreenSize === "mobile" ? "border border-primary" : ""
+              }
+              onClick={() => setSelectedScreenSize("mobile")}
+            >
+              <Smartphone />
+            </Button>
+          </TooltipTrigger>
+          <TooltipContent>
+            <p>Mobile</p>
+          </TooltipContent>
+        </Tooltip>
       </div>
 
       <div className="flex gap-2">
