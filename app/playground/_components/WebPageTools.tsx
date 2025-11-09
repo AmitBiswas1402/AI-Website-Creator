@@ -103,7 +103,7 @@ const WebPageTools = ({
     <div className="mt-1 p-2 shadow rounded-xl w-full flex items-center justify-between">
       <div className="flex gap-2">
         <Tooltip>
-          <TooltipTrigger>
+          <TooltipTrigger asChild>
             <Button
               variant="ghost"
               className={
@@ -120,7 +120,7 @@ const WebPageTools = ({
         </Tooltip>
 
         <Tooltip>
-          <TooltipTrigger>
+          <TooltipTrigger asChild>
             <Button
               variant="ghost"
               className={
@@ -137,7 +137,7 @@ const WebPageTools = ({
         </Tooltip>
 
         <Tooltip>
-          <TooltipTrigger>
+          <TooltipTrigger asChild>
             <Button
               variant="ghost"
               className={
