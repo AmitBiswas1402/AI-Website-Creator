@@ -17,7 +17,7 @@ import {
   AlertDialogTitle,
   AlertDialogDescription,
 } from "@/components/ui/alert-dialog";
-import { Edit3, MoreVertical } from "lucide-react";
+import { Edit3, MoreVertical, Trash2 } from "lucide-react";
 import axios from "axios";
 import Link from "next/link";
 
@@ -38,6 +38,7 @@ const ProjectItem = ({ project, GetProjectList }: ProjectItemProps) => {
 
   const [openDialog, setOpenDialog] = useState(false);
   const [newName, setNewName] = useState(title);
+  const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
 
   const handleRename = async () => {
     if (!newName.trim()) return;
@@ -47,6 +48,18 @@ const ProjectItem = ({ project, GetProjectList }: ProjectItemProps) => {
     });
     setOpenDialog(false);
     GetProjectList(); // refresh after rename
+  };
+
+  const handleDelete = async () => {
+    try {
+      await axios.post("/api/delete-project", {
+        projectId: project.projectId,
+      });
+      setOpenDeleteDialog(false);
+      GetProjectList();
+    } catch (error) {
+      console.error("Delete failed:", error);
+    }
   };
 
   return (
@@ -85,6 +98,14 @@ const ProjectItem = ({ project, GetProjectList }: ProjectItemProps) => {
             <Edit3 className="w-4 h-4" />
             Rename
           </button>
+
+          <button
+            className="flex items-center gap-2 w-full p-2 text-sm text-red-600 rounded-md hover:bg-red-50 transition-colors cursor-pointer"
+            onClick={() => setOpenDeleteDialog(true)}
+          >
+            <Trash2 className="w-4 h-4" />
+            Delete
+          </button>
         </PopoverContent>
       </Popover>
 
@@ -106,6 +127,28 @@ const ProjectItem = ({ project, GetProjectList }: ProjectItemProps) => {
           <AlertDialogFooter>
             <AlertDialogCancel>Cancel</AlertDialogCancel>
             <AlertDialogAction onClick={handleRename}>Rename</AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+
+      {/* Delete Confirmation Dialog */}
+      <AlertDialog open={openDeleteDialog} onOpenChange={setOpenDeleteDialog}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Delete Project</AlertDialogTitle>
+            <AlertDialogDescription>
+              Are you sure you want to delete this project? This action cannot
+              be undone.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction
+              className="bg-red-600 hover:bg-red-700"
+              onClick={handleDelete}
+            >
+              Delete
+            </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
