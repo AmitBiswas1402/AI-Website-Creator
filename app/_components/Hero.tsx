@@ -1,5 +1,6 @@
 "use client";
 
+import { useState, useContext } from "react";
 import { Button } from "@/components/ui/button";
 import { UserDetailContext } from "@/context/UserDetailContext";
 import { SignInButton, useAuth, useUser } from "@clerk/nextjs";
@@ -12,9 +13,9 @@ import {
   LayoutDashboard,
   Loader2Icon,
   User,
+  X,
 } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { useContext, useState } from "react";
 import { toast } from "sonner";
 import { v4 as uuidv4 } from "uuid";
 
@@ -45,8 +46,10 @@ const suggestions = [
 ];
 
 const Hero = () => {
-  const [userInput, setUserInput] = useState<string>();
+  const [userInput, setUserInput] = useState<string>("");
   const [loading, setLoading] = useState(false);
+  const [imagePreview, setImagePreview] = useState<string | null>(null);
+  const [imageFile, setImageFile] = useState<File | null>(null);
   const { userDetail, setUserDetail } = useContext(UserDetailContext);
   const { user } = useUser();
   const { has } = useAuth();
@@ -54,19 +57,31 @@ const Hero = () => {
 
   const hasUnlimitedAccess = has && has({ plan: "unlimited" });
 
-  const CreateNewProject = async () => {
-    // if (!hasUnlimitedAccess && userDetail?.credits! <= 0) {
-    //   toast.error("You have no credits left. Please upgrade your plan.");
-    //   return;
-    // }
+  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file && file.type.startsWith("image/")) {
+      setImageFile(file);
+      setImagePreview(URL.createObjectURL(file));
+    } else {
+      toast.error("Please upload a valid image file");
+    }
+  };
 
+  const removeImage = () => {
+    setImagePreview(null);
+    setImageFile(null);
+  };
+
+  const CreateNewProject = async () => {
     setLoading(true);
     const projectId = uuidv4();
     const frameId = genRandom();
+
     const messages = [
       {
         role: "user",
         content: userInput,
+        image: imagePreview, // you can store or send image URL here if uploading to a cloud
       },
     ];
 
@@ -75,15 +90,10 @@ const Hero = () => {
         projectId,
         frameId,
         messages,
-        // credits: userDetail?.credits,
       });
-      console.log(result.data);
+
       toast.success("Project created!");
       router.push(`/playground/${projectId}?frameId=${frameId}`);
-      // setUserDetail((prev: any) => ({
-      //   ...prev,
-      //   credits: prev?.credits! - 1,
-      // }));
       setLoading(false);
     } catch (error) {
       toast.error("Internal server error");
@@ -93,22 +103,54 @@ const Hero = () => {
 
   return (
     <div className="flex flex-col items-center h-[80vh] justify-center">
-      {/* Headers */}
+      {/* Header */}
       <h2 className="font-bold text-7xl">What should we Design?</h2>
       <p className="mt-2 text-xl text-gray-500">Explore with AI</p>
 
-      {/* input box */}
+      {/* Input Box */}
       <div className="w-full max-w-xl p-5 border mt-5 rounded-2xl">
+        {/* Image Preview */}
+        {imagePreview && (
+          <div className="relative mb-3">
+            <img
+              src={imagePreview}
+              alt="Preview"
+              className="rounded-lg w-full max-h-60 object-contain"
+            />
+            <button
+              onClick={removeImage}
+              className="absolute top-2 right-2 bg-black/50 hover:bg-black text-white p-1 rounded-full"
+            >
+              <X className="w-4 h-4" />
+            </button>
+          </div>
+        )}
+
         <textarea
           placeholder="Describe your page design"
           className="w-full h-24 focus:outline-none focus:ring-0 resize-none"
           value={userInput}
           onChange={(e) => setUserInput(e.target.value)}
         />
+
         <div className="flex justify-between items-center">
-          <Button variant={"ghost"} size={"icon"}>
-            <ImagePlus />
-          </Button>
+          <div>
+            <input
+              type="file"
+              accept="image/*"
+              id="image-upload"
+              onChange={handleImageUpload}
+              className="hidden"
+            />
+            <Button
+              variant={"ghost"}
+              size={"icon"}
+              onClick={() => document.getElementById("image-upload")?.click()}
+            >
+              <ImagePlus />
+            </Button>
+          </div>
+
           {!user ? (
             <SignInButton mode="modal" forceRedirectUrl={"/workspace"}>
               <Button
@@ -132,15 +174,15 @@ const Hero = () => {
         </div>
       </div>
 
-      {/* suggestions list */}
-      <div className="mt-4 flex gap-2.5">
+      {/* Suggestions */}
+      <div className="mt-4 flex gap-2.5 flex-wrap justify-center">
         {suggestions.map((suggestion, index) => (
           <Button
             key={index}
             variant={"outline"}
             onClick={() => setUserInput(suggestion.prompt)}
           >
-            <suggestion.icon />
+            <suggestion.icon className="mr-1" />
             {suggestion.label}
           </Button>
         ))}
@@ -151,7 +193,4 @@ const Hero = () => {
 
 export default Hero;
 
-const genRandom = () => {
-  const num = Math.floor(Math.random() * 10000);
-  return num;
-};
+const genRandom = () => Math.floor(Math.random() * 10000);
