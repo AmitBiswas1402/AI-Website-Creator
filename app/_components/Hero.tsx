@@ -77,11 +77,21 @@ const Hero = () => {
     const projectId = uuidv4();
     const frameId = genRandom();
 
+    let imageUrl = null;
+
+    // Upload image if user selected one
+    if (imageFile) {
+      const formData = new FormData();
+      formData.append("file", imageFile);
+      const uploadRes = await axios.post("/api/upload-image", formData);
+      imageUrl = uploadRes.data.url;
+    }
+
     const messages = [
       {
         role: "user",
         content: userInput,
-        image: imagePreview, // you can store or send image URL here if uploading to a cloud
+        image: imageUrl, // attach uploaded image URL if available
       },
     ];
 
@@ -91,13 +101,13 @@ const Hero = () => {
         frameId,
         messages,
       });
-
       toast.success("Project created!");
       router.push(`/playground/${projectId}?frameId=${frameId}`);
-      setLoading(false);
     } catch (error) {
       toast.error("Internal server error");
-      console.log(error);
+      console.error(error);
+    } finally {
+      setLoading(false);
     }
   };
 
