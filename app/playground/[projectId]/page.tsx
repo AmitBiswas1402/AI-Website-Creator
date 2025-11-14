@@ -15,9 +15,11 @@ export type Frame = {
 };
 
 export type Messages = {
-  role: string;
-  content: string;
+  role: "user" | "assistant";
+  content?: string;
+  image?: string; 
 };
+
 
 const Prompt = `
 userInput: {userInput}

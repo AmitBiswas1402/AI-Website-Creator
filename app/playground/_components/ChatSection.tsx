@@ -8,6 +8,7 @@ type Props = {
   messages: Messages[] | any;
   onSend: (message: string) => void;
   loading: boolean;
+  image?: string;
 };
 
 const ChatSection = ({ messages, onSend, loading }: Props) => {
@@ -36,13 +37,23 @@ const ChatSection = ({ messages, onSend, loading }: Props) => {
               }`}
             >
               <div
-                className={`p-2 rounded-lg max-w-[80%] ${
+                className={`p-2 rounded-lg max-w-[80%] space-y-2 ${
                   msg.role === "user"
                     ? "bg-gray-100 text-black"
                     : "bg-gray-300 text-black"
                 }`}
               >
-                {msg.content}
+                {/* IMAGE PREVIEW IF EXISTS */}
+                {msg.image && (
+                  <img
+                    src={msg.image}
+                    alt="uploaded"
+                    className="rounded-lg max-w-[180px] max-h-[180px] object-cover"
+                  />
+                )}
+
+                {/* TEXT CONTENT */}
+                {msg.content && <p>{msg.content}</p>}
               </div>
             </div>
           ))
@@ -68,7 +79,7 @@ const ChatSection = ({ messages, onSend, loading }: Props) => {
           size={"icon-lg"}
           className="rounded-full"
           onClick={handleSend}
-          disabled={loading || !input.trim()} 
+          disabled={loading || !input.trim()}
         >
           <ArrowUp />
         </Button>
