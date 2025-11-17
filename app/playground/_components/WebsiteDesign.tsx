@@ -100,7 +100,7 @@ const WebsiteDesign = ({ generatedCode }: Props) => {
     root.innerHTML = (generatedCode || "")
       .replaceAll("```html", "")
       .replaceAll("```", "")
-      .replace(/^html/, "")
+      // .replace(/^html/, "")
       .trim();
 
     let hoverEl: HTMLElement | null = null;
