@@ -10,6 +10,8 @@ export async function POST(req: NextRequest) {
       {
         // model: "google/gemma-3-4b-it:free", 
         model: "google/gemma-3-27b-it:free",
+        // model: "meta-llama/llama-4-maverick:free",
+        // model: "google/gemini-2.0-flash-exp:free",
         messages,
         stream: true, // enable streaming
       },
